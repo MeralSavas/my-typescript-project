@@ -5,12 +5,6 @@ import TodoList from "../components/TodoList";
 
 const url = "https://6352dcdca9f3f34c374a7bbe.mockapi.io/todos";
 
-interface TodoType {
-  id: string | number;
-  task: string;
-  isDone: boolean;
-}
-
 const Home = () => {
   const [todos, setTodos] = useState<TodoType[]>([]);
 
@@ -24,13 +18,26 @@ const Home = () => {
     }
   };
 
+  const addTodo: AddFn = async (text) => {
+    const newTodo = {
+      task: text,
+      isDone: false,
+    };
+    try {
+      await axios.post(url, newTodo);
+      getTodos();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     getTodos();
   }, []);
 
   return (
     <div className="main">
-      <InputForm />
+      <InputForm addTodo={addTodo} />
       <TodoList todos={todos} />
     </div>
   );
